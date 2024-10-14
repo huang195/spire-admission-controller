@@ -1,5 +1,5 @@
 all:
-	podman build -t haih/spiffe-csi-webhook:latest .
+	podman build -t haih/spire-spiffe-csi-webhook:latest .
 
 push:
-	podman push haih/spiffe-csi-webhook:latest
+	podman push haih/spire-spiffe-csi-webhook:latest
