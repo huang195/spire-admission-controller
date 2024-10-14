@@ -1,0 +1,20 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: spiffe-csi-webhook
+  labels:
+    app: spiffe-csi-webhook
+  webhooks:
+  - name: "spiffe-csi-webhook"
+    clientConfig:
+      caBundle: ${CA_BUNDLE}
+      service:
+        namespace: spire-system
+        name: spiffe-csi-webhook
+    rules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      operations: ["CREATE"]
+      resources: ["deployments"]
+      scope: "*"
+
