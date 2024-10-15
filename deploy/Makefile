@@ -1,4 +1,4 @@
-APP = spiffe-csi-webhook
+APP = spire-spiffe-csi-webhook
 NAMESPACE = spire-system
 
 .PHONY:cert

@@ -10,7 +10,7 @@ webhooks:
     caBundle: ${CA_BUNDLE}
     service:
       namespace: spire-system
-      name: spiffe-csi-webhook
+      name: spire-spiffe-csi-webhook
   rules:
   - apiGroups: [""]
     apiVersions: ["v1"]

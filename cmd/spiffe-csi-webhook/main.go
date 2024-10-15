@@ -34,7 +34,7 @@ func main() {
 	}
 
     log.Println("Starting SPIFFE CSI webhook server on :8443...")
-	log.Fatal(s.ListenAndServeTLS("/ssl/spiffe-csi-webhook.pem", "/ssl/spiffe-csi-webhook.key"))
+	log.Fatal(s.ListenAndServeTLS("/ssl/spire-spiffe-csi-webhook.pem", "/ssl/spire-spiffe-csi-webhook.key"))
 }
 
 func handleMutate(w http.ResponseWriter, r *http.Request) {
