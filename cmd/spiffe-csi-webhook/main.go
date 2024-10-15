@@ -1,10 +1,12 @@
 package main
 
 import (
-    "encoding/json"
     "fmt"
+    "time"
+    "log"
     "io/ioutil"
     "net/http"
+    "encoding/json"
 
     admissionv1 "k8s.io/api/admission/v1"
     corev1 "k8s.io/api/core/v1"
@@ -19,9 +21,20 @@ var (
 )
 
 func main() {
-    http.HandleFunc("/mutate", handleMutate)
-    fmt.Println("Starting SPIFFE CSI webhook server on :8080...")
-    http.ListenAndServe(":8080", nil)
+    mux := http.NewServeMux()
+
+	mux.HandleFunc("/mutate", handleMutate)
+
+	s := &http.Server{
+		Addr:           ":8443",
+		Handler:        mux,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20, // 1048576
+	}
+
+    log.Println("Starting SPIFFE CSI webhook server on :8443...")
+	log.Fatal(s.ListenAndServeTLS("/ssl/spiffe-csi-webhook.pem", "/ssl/spiffe-csi-webhook.key"))
 }
 
 func handleMutate(w http.ResponseWriter, r *http.Request) {
