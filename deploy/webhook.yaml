@@ -2,8 +2,6 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: spiffe-csi-webhook
-  labels:
-    app: spiffe-csi-webhook
 webhooks:
 - name: "spire-spiffe-csi-webhook.spire-system.svc"
   clientConfig:
