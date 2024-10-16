@@ -81,12 +81,14 @@ func handleMutate(w http.ResponseWriter, r *http.Request) {
         annotations = make(map[string]string)
     }
 
-    if val, exists := annotations["spiffe.io/inject-cert"]; exists && val == "true" {
-        fmt.Println("Found a deployment that requires injection of SPIRE certificates")
+    if val, exists := annotations["spiffe.io/inject-cert"]; !exists || val != "true" {
+        fmt.Println("Found a deployment that does NOT require injection of SPIRE certificates")
 
         writeResponse(w, &review, nil)
         return
     }
+
+    fmt.Println("Found a deployment that requires injection of SPIRE certificates")
 
     // Add the ephemeral volume (emptyDir) to the deployment spec
 	volume := corev1.Volume{
@@ -136,6 +138,7 @@ func handleMutate(w http.ResponseWriter, r *http.Request) {
 
 // Helper function to write the admission response
 func writeResponse(w http.ResponseWriter, review *admissionv1.AdmissionReview, patch []byte) {
+    log.Println("Calling writeResponse")
 	response := admissionv1.AdmissionResponse{
 		Allowed: true,
 		UID:     review.Request.UID,
@@ -159,4 +162,6 @@ func writeResponse(w http.ResponseWriter, review *admissionv1.AdmissionReview, p
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(respBytes)
+
+    log.Println("Exiting writeResponse")
 }
