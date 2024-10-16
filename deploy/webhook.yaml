@@ -9,11 +9,15 @@ webhooks:
     service:
       namespace: spire-system
       name: spire-spiffe-csi-webhook
+      port: 8443
+      path: "/mutate"
   rules:
-  - apiGroups: [""]
+  - apiGroups: ["apps"]
     apiVersions: ["v1"]
     operations: ["CREATE"]
     resources: ["deployments"]
     scope: "*"
-  admissionReviewVersions: ["v1"]
+  failurePolicy: Fail
+  admissionReviewVersions: ["v1", "v1beta1"]
   sideEffects: None
+  timeoutSeconds: 5

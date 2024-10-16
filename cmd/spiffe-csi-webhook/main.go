@@ -4,7 +4,6 @@ import (
     "fmt"
     "time"
     "log"
-    "log/slog"
     "io/ioutil"
     "net/http"
     "encoding/json"
@@ -22,8 +21,6 @@ var (
 )
 
 func main() {
-    slog.SetLogLoggerLevel(slog.LevelDebug)
-
     mux := http.NewServeMux()
 	mux.HandleFunc("/mutate", handleMutate)
 
@@ -35,11 +32,14 @@ func main() {
 		MaxHeaderBytes: 1 << 20, // 1048576
 	}
 
-    slog.Info("Starting SPIFFE CSI webhook server on :8443...")
+    log.Println("Starting SPIFFE CSI webhook server on :8443...")
 	log.Fatal(s.ListenAndServeTLS("/ssl/spire-spiffe-csi-webhook.pem", "/ssl/spire-spiffe-csi-webhook.key"))
 }
 
 func handleMutate(w http.ResponseWriter, r *http.Request) {
+
+    log.Println("Calling handleMutate")
+
     var body []byte
     if r.Body != nil {
         if data, err := ioutil.ReadAll(r.Body); err == nil {
