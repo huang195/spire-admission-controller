@@ -91,10 +91,14 @@ func handleMutate(w http.ResponseWriter, r *http.Request) {
     fmt.Println("Found a deployment that requires injection of SPIRE certificates")
 
     // Add the ephemeral volume (emptyDir) to the deployment spec
+    readOnly := true
 	volume := corev1.Volume{
-		Name: "ephemeral-volume",
+		Name: "csi-identity",
 		VolumeSource: corev1.VolumeSource{
-			EmptyDir: &corev1.EmptyDirVolumeSource{},
+            CSI: &corev1.CSIVolumeSource{
+                Driver: "csi-identity.spiffe.io",
+                ReadOnly: &readOnly,
+            },
 		},
 	}
 
@@ -103,8 +107,9 @@ func handleMutate(w http.ResponseWriter, r *http.Request) {
 		deployment.Spec.Template.Spec.Containers[i].VolumeMounts = append(
 			deployment.Spec.Template.Spec.Containers[i].VolumeMounts,
 			corev1.VolumeMount{
-				Name:      "ephemeral-volume",
-				MountPath: "/mnt/ephemeral",
+				Name:      "csi-identity",
+				MountPath: "/csi-identity",
+                ReadOnly: readOnly,
 			},
 		)
 	}
