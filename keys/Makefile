@@ -7,4 +7,4 @@ cert:
 
 .PHONY:clean
 clean:
-	rm -vf *.key *.pem *.cert *.crt *.csr csr.conf
+	rm -vf *.key *.pem *.cert *.crt *.csr *.srl extfile.conf
