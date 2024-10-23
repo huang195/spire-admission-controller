@@ -7,8 +7,8 @@
 make
 ```
 
-This creates a custom CA, key, and cert for the webhook service. The key and
-cert are then put into the webhook container image.
+This creates a custom CA, key, and cert for the mutating webhook service. The
+key and cert are then put into the webhook container image.
 
 ## Push container image
 
@@ -22,7 +22,7 @@ make push
 cd deploy
 kubectl apply -f deploy.yaml
 export CA_BUNDLE=`cat ca.crt | base64 | tr -d '\n'`
-cat webhook.yaml | envsubst | kubectl apply -f -)
+cat webhook.yaml | envsubst | kubectl apply -f -
 ```
 
 This creates the mutating webhook service that the apiserver will call whenever new deployments are created.
